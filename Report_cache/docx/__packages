@@ -1,0 +1,17 @@
+base
+methods
+datasets
+utils
+grDevices
+graphics
+stats
+rnaturalearth
+wbstats
+leaflet
+DT
+ggplot2
+dplyr
+wesanderson
+xfun
+knitr
+bookdown
