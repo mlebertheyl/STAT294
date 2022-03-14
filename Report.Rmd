@@ -1,0 +1,361 @@
+---
+title: "Report"
+author: "Martina Le-Bert Heyl"
+date: "`r Sys.Date()`"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+**My Github**
+https://github.com/mlebertheyl
+
+**Github repository for this project**
+https://github.com/mlebertheyl/STAT294/blob/main/Project.html
+
+# Motivation
+
+We are often told development depends on economical growth. Along the same line of thinking, governments usually argue in favor of producing more energy required for economical growth, overlooking greenhouse gas emissions. Over the last century, the belief that human development tightly depended on exploiting natural resources was rather praised than questioned. However, over the last few years, and the present impact of climate change, these beliefs have been put to test. Moreover, the tight correlation between economical growth, human development and greenhouse gas emission, has been proven not to be as nearly as strong as we thought. Even though this might have been true in the 20th century, this is not what research shows in the past decades. 
+
+True or not we still encounter this highly debated argument in the present day. So the motivation for today´s presentation is to explore this relationship in the world´s map.
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(rnaturalearth) #to hold and facilitate interaction with Natural Earth map data.
+library(wbstats) # to search and download data from the World Bank API.
+library(leaflet) # to create and customize interactive maps.
+library(DT) # provides an R interface to the JavaScript library DataTables.
+library(ggplot2) # to data visualization.
+library(dplyr) #to data manipulation.
+library(wesanderson); library(xfun); library(knitr); library(bookdown) # color palette, and presentation packages
+```
+
+
+```{r, include=FALSE}
+# automatically create a bib database for R packages
+knitr::write_bib(c(
+  .packages(), 'bookdown', 'knitr', 'rmarkdown', 'rnaturalearth', 'wbstats', 'leaflet', 'ggplot2', 'DT','wesanderson', 'dplyr'), 'packages.bib')
+```
+
+# Introduction. 
+
+**Brief description of the data**
+
+The variables used in the present work were life expectancy, GDP, and green house emissions. Life expectancy is the average age of death by country; GDP is a broad measure of a country´s production; and green house emissions refers to gas emissions related earth´s warming. Measurements were taken from the World Bank Database for the year 2017.
+
+**Objectives**
+
+- Draw a map summarizing the information of each variable per country for the year 2017.
+
+- Explore general patterns for the selected variables between countries and continents.
+
+- Present the information in an appealing and understandable way.
+
+# YAML and Packages
+
+The following is the `YAML` and packages used to build the flexdashboard. Each package has a brief description on what it was used for.
+
+`title: "STAT 294 - Contemporary Topics in Statistics"`
+
+`Source: World Bank https://data.worldbank.org"`
+
+`author: "Martina Le-Bert"`
+
+`output: flexdashboard::flex_dashboard`
+
+```{r, eval=FALSE, cache=TRUE, warning=FALSE, echo=TRUE}
+library(rnaturalearth) #to hold and facilitate interaction with Natural Earth map data.
+library(wbstats) # to search and download data from the World Bank API.
+library(leaflet) # to create and customize interactive maps.
+library(DT) # provides an R interface to the JavaScript library DataTables.
+library(ggplot2) # to data visualization.
+library(dplyr) #to data manipulation.
+library(wesanderson); library(knitr); library(xfun); library(bookdown) # color palette, and presentation packages
+```
+
+# Data
+
+The following command lines refer to how the map frame was build (1), how variables were extracted from the Worl Bank database (2), and how the final data base was put together using (1) and (2).
+
+World map.
+
+```{r,warning=FALSE, message=FALSE, echo=TRUE, eval=FALSE}
+map <- ne_countries()
+names(map)[names(map) == "iso_a3"] <- "ISO3"
+names(map)[names(map) == "name"] <- "NAME"
+```
+
+Extract the variables from the World Bank database.
+
+```{r,warning=FALSE, message=FALSE, echo=TRUE, eval=FALSE}
+e <- wb(
+  indicator = "EN.ATM.GHGT.KT.CE",
+  startdate = 2017, enddate = 2017
+)
+
+f <- wb(
+  indicator = "NY.GDP.PCAP.PP.CD",
+  startdate = 2017, enddate = 2017
+)
+
+g <- wb(
+  indicator = "SP.DYN.LE00.IN",
+startdate = 2017, enddate = 2017
+)
+
+```
+
+Construct our data base.
+
+```{r,warning=FALSE, message=FALSE, echo=TRUE, eval=FALSE}
+map$GHG <- e[match(map$ISO3, e$iso3), "value"]
+map$GDP <- f[match(map$ISO3, f$iso3), "value"]
+map$Life <- g[match(map$ISO3,g$iso3), "value"]
+```
+
+# Layout
+
+The next figure shows how the flexdashboard was structured. The setup was organized in two main rows, as it is shown in the above command line. The flexdashboard screen is divided in two by these main rows, and each chart is build using `###` underneath the row command line.
+
+**Layout** panels in flexdashboard, and row setup.
+
+```{r layout, out.width = "100%", fig.pos="h", fig.show='hold',  fig.cap="(ref:layout)", echo=FALSE}
+
+knitr::include_graphics(c("images/layout.png"))
+```
+
+**Row setup**
+
+`Row {.tabset .tabset-fade}`
+
+`-------------------------------------`
+
+
+
+# Chart Code
+
+Next the code for each chart is displayed. The line followed by `###` corresponds to the name of the specific chart. Here we can see how maps were constructed using the `leaflet` package in  `R`, and the different specifications made for each of them. The same aplies for the data table using the `DT` package and the plot using `ggplot2`.
+
+## Chart 1. {-}
+
+`Row {.tabset .tabset-fade}`
+
+`-------------------------------------`
+
+`### Annual GHG emissions, 2017`
+
+```{r, warning=FALSE, message=FALSE, echo=TRUE, eval=FALSE}
+pal <- colorBin(
+  palette = c("#DD8D29", "#E2D200", "#46ACC8", "#E58601", "#B40F20"), domain = map$GHG,
+  bins = seq(0, max(map$GHG, na.rm = TRUE) + 10, length.out=10)
+)
+
+map$labels <- paste0(
+  "<strong> Country: </strong> ",
+  map$NAME, "<br/> ",
+  "<strong> GHG: </strong> ",
+  map$GHG, "<br/> "
+) %>%
+  lapply(htmltools::HTML)
+
+leaflet(map) %>%
+  addTiles() %>%
+  setView(lng = 0, lat = 30, zoom = 2) %>%
+  addPolygons(
+    fillColor = ~ pal(GHG),
+    color = "white",
+    fillOpacity = 0.7,
+    label = ~labels,
+    highlight = highlightOptions(
+      color = "black",
+      bringToFront = TRUE
+    )
+  ) %>%
+  leaflet::addLegend(
+    pal = pal, values = ~GHG,
+    opacity = 0.7, title = "GHG"
+  )
+```
+
+
+
+## Chart 2.{-}
+
+`### GDP per capita, 2017`
+
+```{r, warning=FALSE, message=FALSE, echo=TRUE, eval=FALSE}
+pal <- colorBin(
+  palette = c("#DD8D29", "#E2D200", "#46ACC8", "#E58601", "#B40F20"), domain = map$GDP,
+  bins = seq(0, max(map$GDP, na.rm = TRUE) + 10, length.out=10)
+)
+
+map$labels <- paste0(
+  "<strong> Country: </strong> ",
+  map$NAME, "<br/> ",
+  "<strong> GDP: </strong> ",
+  map$GDP, "<br/> "
+) %>%
+  lapply(htmltools::HTML)
+
+leaflet(map) %>%
+  addTiles() %>%
+  setView(lng = 0, lat = 30, zoom = 2) %>%
+  addPolygons(
+    fillColor = ~ pal(GDP),
+    color = "white",
+    fillOpacity = 0.7,
+    label = ~labels,
+    highlight = highlightOptions(
+      color = "black",
+      bringToFront = TRUE
+    )
+  ) %>%
+  leaflet::addLegend(
+    pal = pal, values = ~GDP,
+    opacity = 0.7, title = "GDP"
+  )
+```
+
+## Chart 3. {-}
+
+`### Life expectancy, 2017`
+
+```{r, warning=FALSE, message=FALSE, echo=TRUE, eval=FALSE}
+pal <- colorBin(
+  palette = c("#DD8D29", "#E2D200", "#46ACC8", "#E58601", "#B40F20"), domain = map$Life,
+  bins = seq(0, max(map$Life, na.rm = TRUE) + 10, length.out=10)
+)
+
+map$labels <- paste0(
+  "<strong> Country: </strong> ",
+  map$NAME, "<br/> ",
+  "<strong> Life Expectancy: </strong> ",
+  map$Life, "<br/> "
+) %>%
+  lapply(htmltools::HTML)
+
+leaflet(map) %>%
+  addTiles() %>%
+  setView(lng = 0, lat = 30, zoom = 2) %>%
+  addPolygons(
+    fillColor = ~ pal(Life),
+    color = "white",
+    fillOpacity = 0.7,
+    label = ~labels,
+    highlight = highlightOptions(
+      color = "black",
+      bringToFront = TRUE
+    )
+  ) %>%
+  leaflet::addLegend(
+    pal = pal, values = ~Life,
+    opacity = 0.7, title = "Life"
+  )
+```
+
+
+
+## Chart 4. {-}
+   
+`Row {.tabset .tabset-fade}`
+
+`-------------------------------------`
+
+`### Definitions`
+
+  - A greenhouse gas (GHG or GhG) is a gas that absorbs and emits radiant energy within the thermal infrared range, causing the greenhouse effect. Total greenhouse gas emissions (kt of $CO_2$ equivalent).
+  
+  - GDP at purchaser's prices is the sum of gross value added by all resident producers in the economy plus any product taxes and minus any subsidies not included in the value of the products.
+  
+  - Life expectancy is a statistical measure of the average time an organism is expected to live, based on the year of its birth, its current age, and other demographic factors like sex. 
+
+
+
+## Chart 5. {-}
+
+`### Average emission of GHG, GDP per capita and Life Expectancy per continent, 2017`
+
+```{r, warning=FALSE, message=FALSE, echo=TRUE, eval=FALSE}
+table<-map@data %>%
+  filter(!is.na(GHG)& !is.na(GDP)) %>%
+  group_by(continent) %>% 
+  summarise(GHG = mean(GHG),
+            GDP = mean(GDP),
+            "Life Expectancy" = mean(Life))
+
+datatable(table, class = 'cell-border stripe',
+          options = list(searching=FALSE, pageLength=6))
+```   
+
+
+
+## Chart 6.{-}
+
+`### GDP per capita vs Life Expectancy related to GHG emissions per continent, 2017`
+
+```{r, warning=FALSE, message=FALSE, echo=TRUE, eval=FALSE}
+MyPalette = c("#DD8D29", "#E2D200", "#46ACC8", "#E58601", "#B40F20")
+map@data %>% 
+  filter(continent != "Antarctica" & continent != "Seven seas (open ocean)") %>% 
+ggplot(aes(x=GDP, y=Life),na.rm = TRUE) +
+    geom_point(aes(size=GHG, colour= GHG))+
+ scale_x_continuous(breaks=c(0,40000,80000,120000),limits=c(-100, 125000))+
+  scale_colour_gradientn(limits=c(0, 13000000), breaks=seq(0, max(map$GHG, na.rm = TRUE) + 10, length.out=10), colours = MyPalette)+
+  scale_size_continuous(limits=c(0, 13000000), breaks=seq(0, max(map$GHG, na.rm = TRUE) + 10, length.out=10)) +
+ guides(color= guide_legend(), size=guide_legend())+
+  labs(x='GDP per capita', 
+      y='Life expectancy')+
+  theme(axis.text =element_text(size=10,color="#191919"),
+        axis.title=element_text(size=20,color="#191919"),
+        panel.background = element_blank(),
+        panel.border = element_rect(color="#191919", size=1, fill=NA),
+        panel.grid.major =  element_line(colour = "#708090",size=0.1),
+        strip.text.x = element_text(size = 10),
+        legend.title = element_text(size = 14),
+        legend.text = element_text(size = 10))+
+theme_light()+
+ facet_wrap(~continent, nrow=4)
+```
+
+
+# Flexdashboard 
+
+Finally, the R Markdown file used to create the flexdashboard for this project is available for download in the following link.
+
+
+
+```{r, echo=FALSE}
+xfun::pkg_load2(c("htmltools", "mime"))
+xfun::embed_file("Project.Rmd")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
