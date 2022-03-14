@@ -12,7 +12,7 @@ output:
 https://github.com/mlebertheyl
 
 **Github repository for this project**
-https://github.com/mlebertheyl/STAT294/blob/main/Project.html
+https://github.com/mlebertheyl/STAT294
 
 # Motivation
 
