@@ -1,0 +1,49 @@
+--- 
+title: 
+author: Martina Le-Bert Heyl
+date: 
+site: bookdown::bookdown_site
+output: bookdown::gitbook
+keep_md: true
+documentclass: book
+---
+
+
+
+# Motivation
+
+We are often told development depends on economical growth. Along the same line of thinking, governments usually argue in favor of producing more energy required for economical growth, overlooking greenhouse gas emissions. Over the last century, the belief that human development tightly depended on exploiting natural resources was rather praised than questioned. However, over the last few years, and the present impact of climate change, these beliefs have been put to test. Moreover, the tight correlation between economical growth, human development and greenhouse gas emission, has been proven not to be as nearly as strong as we thought. Even though this might have been true in the 20th century, this is not what research shows in the past decades. 
+
+True or not we still encounter this highly debated argument in the present day. So the motivation for today´s presentation is to explore this relationship in the world´s map.
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(rnaturalearth) #to hold and facilitate interaction with Natural Earth map data.
+library(wbstats) # to search and download data from the World Bank API.
+library(leaflet) # to create and customize interactive maps.
+library(DT) # provides an R interface to the JavaScript library DataTables.
+library(ggplot2) # to data visualization.
+library(dplyr) #to data manipulation.
+library(wesanderson); library(xfun); library(knitr); library(bookdown) # color palette, and presentation packages
+```
+
+
+```{r, include=FALSE}
+# automatically create a bib database for R packages
+knitr::write_bib(c(
+  .packages(), 'bookdown', 'knitr', 'rmarkdown', 'rnaturalearth', 'wbstats', 'leaflet', 'ggplot2', 'DT','wesanderson', 'dplyr'), 'packages.bib')
+```
+
+
+
+
+
+
+
+
+
+
+
+

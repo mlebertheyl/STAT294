@@ -1,0 +1,43 @@
+# Chart 1. {-}
+
+`Row {.tabset .tabset-fade}`
+
+`-------------------------------------`
+
+`### Annual GHG emissions, 2017`
+
+```{r, warning=FALSE, message=FALSE, echo=TRUE, eval=FALSE}
+pal <- colorBin(
+  palette = c("#DD8D29", "#E2D200", "#46ACC8", "#E58601", "#B40F20"), domain = map$GHG,
+  bins = seq(0, max(map$GHG, na.rm = TRUE) + 10, length.out=10)
+)
+
+map$labels <- paste0(
+  "<strong> Country: </strong> ",
+  map$NAME, "<br/> ",
+  "<strong> GHG: </strong> ",
+  map$GHG, "<br/> "
+) %>%
+  lapply(htmltools::HTML)
+
+leaflet(map) %>%
+  addTiles() %>%
+  setView(lng = 0, lat = 30, zoom = 2) %>%
+  addPolygons(
+    fillColor = ~ pal(GHG),
+    color = "white",
+    fillOpacity = 0.7,
+    label = ~labels,
+    highlight = highlightOptions(
+      color = "black",
+      bringToFront = TRUE
+    )
+  ) %>%
+  leaflet::addLegend(
+    pal = pal, values = ~GHG,
+    opacity = 0.7, title = "GHG"
+  )
+```
+
+
+

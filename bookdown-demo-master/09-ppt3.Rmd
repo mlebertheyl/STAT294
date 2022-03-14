@@ -1,0 +1,16 @@
+# Chart 5. {-}
+
+`### Average emission of GHG, GDP per capita and Life Expectancy per continent, 2017`
+
+```{r, warning=FALSE, message=FALSE, echo=TRUE, eval=FALSE}
+table<-map@data %>%
+  filter(!is.na(GHG)& !is.na(GDP)) %>%
+  group_by(continent) %>% 
+  summarise(GHG = mean(GHG),
+            GDP = mean(GDP),
+            "Life Expectancy" = mean(Life))
+
+datatable(table, class = 'cell-border stripe',
+          options = list(searching=FALSE, pageLength=6))
+```   
+

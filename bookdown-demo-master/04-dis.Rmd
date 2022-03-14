@@ -1,0 +1,21 @@
+# Layout
+
+(ref:layout) Layout panels in flexdashboard.
+
+```{r layout, out.width = "100%", fig.pos="h", fig.show='hold',  fig.cap="(ref:layout)", echo=FALSE}
+
+knitr::include_graphics(c("images/layout.png"))
+```
+
+**Row setup**
+
+`Row {.tabset .tabset-fade}`
+
+`-------------------------------------`
+
+
+
+
+
+
+

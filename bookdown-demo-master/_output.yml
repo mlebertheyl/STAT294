@@ -1,0 +1,17 @@
+bookdown::gitbook:
+  split_by: none
+  self_contained: true
+  config:
+    toc:
+      before: |
+        <li><a href="./">STAT 294: Flexdashboard</a></li>
+      after: |
+        <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+    sharing: true
+bookdown::pdf_book:
+  latex_engine: xelatex
+  citation_package: natbib
+  keep_tex: yes
+bookdown::epub_book: default
+bookdown::bs4_book: default
+

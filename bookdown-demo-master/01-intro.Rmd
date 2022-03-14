@@ -1,0 +1,22 @@
+# Introduction. 
+
+**Brief description of the data**
+
+The variables used in the present work were life expectancy, GDP, and green house emissions. Life expectancy is the average age of death by country; GDP is a broad measure of a country´s production; and green house emissions refers to gas emissions related earth´s warming. Measurements were taken from the World Bank Database for the year 2017.
+
+**Objectives**
+
+- Draw a map summarizing the information of each variable per country for the year 2017.
+
+- Explore general patterns for the selected variables between countries and continents.
+
+- Present the information in an appealing and understandable way.
+
+
+
+
+
+
+
+
+

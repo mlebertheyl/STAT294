@@ -1,0 +1,24 @@
+# YAML and Packages
+
+`title: "STAT 294 - Contemporary Topics in Statistics"`
+
+`Source: World Bank https://data.worldbank.org"`
+
+`author: "Martina Le-Bert"`
+
+`output: flexdashboard::flex_dashboard`
+
+```{r, eval=FALSE, cache=TRUE, warning=FALSE, echo=TRUE}
+library(rnaturalearth) #to hold and facilitate interaction with Natural Earth map data.
+library(wbstats) # to search and download data from the World Bank API.
+library(leaflet) # to create and customize interactive maps.
+library(DT) # provides an R interface to the JavaScript library DataTables.
+library(ggplot2) # to data visualization.
+library(dplyr) #to data manipulation.
+library(wesanderson); library(knitr); library(xfun); library(bookdown) # color palette, and presentation packages
+```
+
+
+
+
+

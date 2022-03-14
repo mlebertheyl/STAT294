@@ -1,0 +1,8 @@
+# Flexdashboard 
+
+```{r, echo=FALSE}
+xfun::pkg_load2(c("htmltools", "mime"))
+xfun::embed_file('images/Project.html')
+
+```
+

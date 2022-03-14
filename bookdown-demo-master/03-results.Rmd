@@ -1,0 +1,38 @@
+# Data
+
+World map.
+
+```{r,warning=FALSE, message=FALSE, echo=TRUE, eval=FALSE}
+map <- ne_countries()
+names(map)[names(map) == "iso_a3"] <- "ISO3"
+names(map)[names(map) == "name"] <- "NAME"
+```
+
+Extract the variables from the World Bank database.
+
+```{r,warning=FALSE, message=FALSE, echo=TRUE, eval=FALSE}
+e <- wb(
+  indicator = "EN.ATM.GHGT.KT.CE",
+  startdate = 2017, enddate = 2017
+)
+
+f <- wb(
+  indicator = "NY.GDP.PCAP.PP.CD",
+  startdate = 2017, enddate = 2017
+)
+
+g <- wb(
+  indicator = "SP.DYN.LE00.IN",
+startdate = 2017, enddate = 2017
+)
+
+```
+
+Construct our data base.
+
+```{r,warning=FALSE, message=FALSE, echo=TRUE, eval=FALSE}
+map$GHG <- e[match(map$ISO3, e$iso3), "value"]
+map$GDP <- f[match(map$ISO3, f$iso3), "value"]
+map$Life <- g[match(map$ISO3,g$iso3), "value"]
+```
+

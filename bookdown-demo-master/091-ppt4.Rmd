@@ -1,0 +1,29 @@
+# Chart 6.{-}
+
+`### GDP per capita vs Life Expectancy related to GHG emissions per continent, 2017`
+
+```{r, warning=FALSE, message=FALSE, echo=TRUE, eval=FALSE}
+MyPalette = c("#DD8D29", "#E2D200", "#46ACC8", "#E58601", "#B40F20")
+map@data %>% 
+  filter(continent != "Antarctica" & continent != "Seven seas (open ocean)") %>% 
+ggplot(aes(x=GDP, y=Life),na.rm = TRUE) +
+    geom_point(aes(size=GHG, colour= GHG))+
+ scale_x_continuous(breaks=c(0,40000,80000,120000),limits=c(-100, 125000))+
+  scale_colour_gradientn(limits=c(0, 13000000), breaks=seq(0, max(map$GHG, na.rm = TRUE) + 10, length.out=10), colours = MyPalette)+
+  scale_size_continuous(limits=c(0, 13000000), breaks=seq(0, max(map$GHG, na.rm = TRUE) + 10, length.out=10)) +
+ guides(color= guide_legend(), size=guide_legend())+
+  labs(x='GDP per capita', 
+      y='Life expectancy')+
+  theme(axis.text =element_text(size=10,color="#191919"),
+        axis.title=element_text(size=20,color="#191919"),
+        panel.background = element_blank(),
+        panel.border = element_rect(color="#191919", size=1, fill=NA),
+        panel.grid.major =  element_line(colour = "#708090",size=0.1),
+        strip.text.x = element_text(size = 10),
+        legend.title = element_text(size = 14),
+        legend.text = element_text(size = 10))+
+theme_light()+
+ facet_wrap(~continent, nrow=4)
+```
+
+
