@@ -3,8 +3,8 @@ title: "Report"
 author: "Martina Le-Bert Heyl"
 date: "`r Sys.Date()`"
 output:
-  word_document: default
   html_document: default
+  word_document: default
   pdf_document: default
 ---
 
@@ -323,8 +323,14 @@ theme_light()+
 
 # Flexdashboard 
 
-Finally, the R Markdown file used to create the flexdashboard for this project is available for download in the following link.
+Finally, the R Markdown and html file used to create and present the flexdashboard for this project are available for download in the following links.
 
+
+
+```{r, echo=FALSE}
+xfun::pkg_load2(c("htmltools", "mime"))
+xfun::embed_file("Project.html")
+```
 
 
 ```{r, echo=FALSE}
